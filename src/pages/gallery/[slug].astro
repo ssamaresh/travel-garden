@@ -1,0 +1,71 @@
+---
+import { getAlbumImages } from "../../utils/albums";
+import { Image } from "astro:assets";
+
+import ImageWithFavorite from "../../components/ImageWithFavorite";
+import { getCollection, type CollectionEntry } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+
+export async function getStaticPaths() {
+  const albums = await getCollection("albums");
+  const paths = albums.map((album) => {
+    return {
+      params: {
+        slug: album.slug,
+      },
+      props: {
+        album,
+      },
+    };
+  });
+
+  return paths;
+}
+
+const { album } = Astro.props;
+
+const { Content } = await album.render();
+const images = await getAlbumImages(album.slug);
+
+console.log("IMAGES", images);
+---
+
+<Layout title={album.data.title}>
+  <div class="text-center my-16 mb-32">
+    <h1 class="text-3xl xl:text-6xl font-bold">
+      {album.data.title}
+    </h1>
+    <p class="text-lg xl:text-2xl my-4">
+      {album.data.description}
+    </p>
+
+    <div>
+      {
+        images.map((image) => (
+          <>
+            <Image
+              src={image}
+              alt={`Image from ${album.data.title} album`}
+              quality="max"
+              widths={[240, 540, 720]}
+              class="rounded mb-4 border border-transparent hover:border-gray-300 transition-all duration-300 ease-in-out hover:shadow-lg"
+              loading="lazy"
+            />
+
+            <ImageWithFavorite client:load
+              src={image.src}
+              alt={album.data.title}
+            />
+          </>
+        ))
+      }
+    </div>
+
+    <p class="text-lg my-4 text-center">
+      <a href="/gallery/" class="text-white hover:underline">Go back →</a>
+    </p>
+  </div>
+  <article>
+    <Content />
+  </article>
+</Layout>

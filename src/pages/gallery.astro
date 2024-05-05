@@ -1,0 +1,42 @@
+---
+import { Image } from "astro:assets";
+import { getCollection, type CollectionEntry } from "astro:content";
+import Link from "../components/Link.astro";
+import Layout from "../layouts/Layout.astro";
+
+const albums: CollectionEntry<"albums">[] = await getCollection("albums");
+---
+
+<Layout title="Welcome to Astro.">
+  <div class="p-8">
+    <h1 class="text-5xl font-bold text-center my-8">Gallery</h1>
+    <div class="container grid grid-cols-3 gap-8">
+      {
+        albums.map((item) => {
+          console.log("ITEM", item);
+          return (
+            <Link
+              class="block justify-between group transition-all mb-4"
+              href={`/gallery/${item.slug}`}
+            >
+              <Image
+                src={item.data.cover}
+                alt={item.data.title}
+                quality="max"
+                widths={[240, 540, 720]}
+                class:list={[
+                  "rounded-lg transition-all",
+                  "group-hover:shadow-lg group-hover:opacity-90",
+                ]}
+              />
+              <div class="mt-4 text-center text-neutral-700">
+                <strong class="font-bold">{item.data.title}</strong>
+                <p class="text-sm">{item.data.description}</p>
+              </div>
+            </Link>
+          );
+        })
+      }
+    </div>
+  </div>
+</Layout>

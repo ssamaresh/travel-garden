@@ -1,0 +1,18 @@
+---
+import { Image } from "astro:assets";
+import myPhoto from "../assets/me.jpeg";
+
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="About">
+  <Image src={myPhoto} alt="Me" width={512} quality="max" class="rounded-full" />
+  <p>
+    Hey, I&apos;m <b>Samaresh Sridhar</b>. I live in Boston, MA USA, but
+    originally I&apos;m from India. As a fullstack engineer, I enjoy
+    building interesting pet projects from scratch. Of course, just like any
+    developer, I end up abandoning them. I&apos;m a super curious fellow and
+    I&apos;m always up to learn something new. Aside from learning new things, I
+    enjoy live streaming on Twitch and creating courses for egghead.io.
+  </p>
+</Layout>
